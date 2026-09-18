@@ -55,7 +55,7 @@ function SwipeManager({ onSwipeUp, onSwipeDown, onContinuousScroll }) {
       window.removeEventListener('touchstart', handleTouchStart)
       window.removeEventListener('touchend', handleTouchEnd)
     }
-  }, [onSwipeUp, onSwipeDown])
+  }, [onSwipeUp, onSwipeDown, onContinuousScroll])
   
   return null
 }
@@ -95,12 +95,12 @@ function OverlookUI() {
 
   const handleSwipeDown = useCallback(() => {
     if (selectedProject) return
-    setDoorIndex(prev => Math.min(Math.ceil(prev) + 1, maxDoors))
+    setDoorIndex(prev => Math.min(Math.floor(prev) + 1, maxDoors))
   }, [maxDoors, selectedProject])
 
   const handleSwipeUp = useCallback(() => {
     if (selectedProject) return
-    setDoorIndex(prev => Math.max(Math.floor(prev) - 1, 0))
+    setDoorIndex(prev => Math.max(Math.ceil(prev) - 1, 0))
   }, [selectedProject])
 
   const hasScrolled = doorIndex > 0

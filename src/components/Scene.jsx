@@ -45,7 +45,7 @@ export default function Scene({ onDoorClick, projects, selectedProject, doorInde
       }
     }
     
-    state.camera.position.z = THREE.MathUtils.damp(state.camera.position.z, targetZ, 1.5, delta)
+    state.camera.position.z = THREE.MathUtils.damp(state.camera.position.z, targetZ, 2.5, delta)
     
     let closestDoor = null
     let minDistance = Infinity
@@ -80,8 +80,8 @@ export default function Scene({ onDoorClick, projects, selectedProject, doorInde
       if (closestDoor.isContact) {
         // Logique spéciale pour la porte de fin (toujours au centre)
         influence = Math.max(0, 1 - (minDistance / 4))
-        cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, 0, 1.5, delta)
-        cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, closestDoor.doorZ, 1.5, delta)
+        cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, 0, 2.5, delta)
+        cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, closestDoor.doorZ, 2.5, delta)
       } else {
         // Logique pour les portes latérales
         const isApproaching = state.camera.position.z >= closestDoor.doorZ
@@ -102,14 +102,14 @@ export default function Scene({ onDoorClick, projects, selectedProject, doorInde
           idealTargetZ = THREE.MathUtils.lerp(state.camera.position.z - 10, closestDoor.doorZ, influence)
         }
 
-        cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, targetX * influence, 1.5, delta)
-        cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, idealTargetZ, 1.5, delta)
+        cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, targetX * influence, 2.5, delta)
+        cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, idealTargetZ, 2.5, delta)
       }
       cameraTarget.current.y = 1.5
     } else {
-      cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, 0, 1.5, delta)
+      cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, 0, 2.5, delta)
       cameraTarget.current.y = 1.5
-      cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, state.camera.position.z - 10, 1.5, delta)
+      cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, state.camera.position.z - 10, 2.5, delta)
     }
     
     state.camera.lookAt(cameraTarget.current)
