@@ -16,7 +16,7 @@ function CameraUpdater({ isMobile }) {
   return null
 }
 
-function SwipeManager({ onSwipeUp, onSwipeDown }) {
+function SwipeManager({ onSwipeUp, onSwipeDown, onContinuousScroll }) {
   useEffect(() => {
     let isScrolling = false
     let touchStartY = 0
@@ -30,7 +30,8 @@ function SwipeManager({ onSwipeUp, onSwipeDown }) {
     }
 
     const handleWheel = (e) => {
-      trigger(e.deltaY > 0 ? 1 : -1)
+      // Scroll continu sur PC, la sensibilité est ajustée ici
+      onContinuousScroll(e.deltaY)
     }
 
     const handleTouchStart = (e) => {
@@ -83,14 +84,23 @@ function OverlookUI() {
 
   const closeModal = () => setSelectedProject(null)
 
+  const handleContinuousScroll = useCallback((deltaY) => {
+    if (selectedProject) return
+    setDoorIndex(prev => {
+      // Ajustez la sensibilité ici : 0.003 permet de faire environ 1 porte par grand coup de molette
+      let newIndex = prev + deltaY * 0.003
+      return Math.max(0, Math.min(newIndex, maxDoors))
+    })
+  }, [maxDoors, selectedProject])
+
   const handleSwipeDown = useCallback(() => {
     if (selectedProject) return
-    setDoorIndex(prev => Math.min(prev + 1, maxDoors))
+    setDoorIndex(prev => Math.min(Math.ceil(prev) + 1, maxDoors))
   }, [maxDoors, selectedProject])
 
   const handleSwipeUp = useCallback(() => {
     if (selectedProject) return
-    setDoorIndex(prev => Math.max(prev - 1, 0))
+    setDoorIndex(prev => Math.max(Math.floor(prev) - 1, 0))
   }, [selectedProject])
 
   const hasScrolled = doorIndex > 0
@@ -98,7 +108,11 @@ function OverlookUI() {
   return (
     <>
       <div className="fixed-container scroll-snap-wrapper">
-        <SwipeManager onSwipeUp={handleSwipeUp} onSwipeDown={handleSwipeDown} />
+        <SwipeManager 
+          onSwipeUp={handleSwipeUp} 
+          onSwipeDown={handleSwipeDown} 
+          onContinuousScroll={handleContinuousScroll}
+        />
         <Canvas
           camera={{ position: [0, 1.5, 8], fov: isMobile ? 100 : 60 }}
           dpr={[1, 2]}

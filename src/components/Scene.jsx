@@ -25,18 +25,27 @@ export default function Scene({ onDoorClick, projects, selectedProject, doorInde
 
   useFrame((state, delta) => {
     let targetZ;
-    if (doorIndex === 0) {
-      targetZ = corridorStartZ - 1;
+    const startZ = corridorStartZ - 1;
+    
+    if (doorIndex <= 0) {
+      targetZ = startZ;
+    } else if (doorIndex <= 1) {
+      // Transition fluide de l'entrée vers la première porte
+      targetZ = THREE.MathUtils.lerp(startZ, 1.5, doorIndex);
     } else {
       const doorActualIndex = doorIndex - 1;
       if (doorActualIndex < regularProjects.length) {
+         // Défilement continu entre les portes (interpolation linéaire car -doorActualIndex * doorSpacing est linéaire)
          targetZ = -doorActualIndex * doorSpacing + 1.5;
       } else {
-         targetZ = contactDoorZ + 3;
+         // Transition finale vers l'ascenseur (porte de contact)
+         const overflow = doorIndex - regularProjects.length;
+         const lastRegularZ = -(regularProjects.length - 1) * doorSpacing + 1.5;
+         targetZ = THREE.MathUtils.lerp(lastRegularZ, contactDoorZ + 3, Math.min(1, overflow));
       }
     }
     
-    state.camera.position.z = THREE.MathUtils.damp(state.camera.position.z, targetZ, 4, delta)
+    state.camera.position.z = THREE.MathUtils.damp(state.camera.position.z, targetZ, 1.5, delta)
     
     let closestDoor = null
     let minDistance = Infinity
@@ -71,8 +80,8 @@ export default function Scene({ onDoorClick, projects, selectedProject, doorInde
       if (closestDoor.isContact) {
         // Logique spéciale pour la porte de fin (toujours au centre)
         influence = Math.max(0, 1 - (minDistance / 4))
-        cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, 0, 4, delta)
-        cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, closestDoor.doorZ, 4, delta)
+        cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, 0, 1.5, delta)
+        cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, closestDoor.doorZ, 1.5, delta)
       } else {
         // Logique pour les portes latérales
         const isApproaching = state.camera.position.z >= closestDoor.doorZ
@@ -93,14 +102,14 @@ export default function Scene({ onDoorClick, projects, selectedProject, doorInde
           idealTargetZ = THREE.MathUtils.lerp(state.camera.position.z - 10, closestDoor.doorZ, influence)
         }
 
-        cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, targetX * influence, 4, delta)
-        cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, idealTargetZ, 4, delta)
+        cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, targetX * influence, 1.5, delta)
+        cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, idealTargetZ, 1.5, delta)
       }
       cameraTarget.current.y = 1.5
     } else {
-      cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, 0, 4, delta)
+      cameraTarget.current.x = THREE.MathUtils.damp(cameraTarget.current.x, 0, 1.5, delta)
       cameraTarget.current.y = 1.5
-      cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, state.camera.position.z - 10, 4, delta)
+      cameraTarget.current.z = THREE.MathUtils.damp(cameraTarget.current.z, state.camera.position.z - 10, 1.5, delta)
     }
     
     state.camera.lookAt(cameraTarget.current)
