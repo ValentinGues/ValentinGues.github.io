@@ -1,0 +1,281 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+  background-color: #000;
+  color: #fff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  overscroll-behavior: none;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* Scroll container to give space for scrolling */
+.scroll-container {
+  height: 400vh; /* Adjust based on the number of doors */
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1; /* Behind the fixed canvas */
+  pointer-events: none; /* Let events pass to canvas */
+}
+
+/* Fixed container for the 3D Canvas and UI Overlay */
+.fixed-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none; /* Let events pass to canvas by default */
+}
+
+/* Le ScrollControls injecte une div avec overflow: auto; dans ce conteneur.
+   C'est elle qu'on vise pour le scroll-snap. */
+.scroll-snap-wrapper > div {
+  scroll-snap-type: y mandatory;
+}
+
+.fixed-container canvas {
+  pointer-events: auto; /* Enable interaction with 3D scene */
+}
+
+.ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Pass events to canvas except for active UI elements */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto; /* Catch clicks to close modal */
+}
+
+.project-modal {
+  background: rgba(20, 20, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow-y: auto;
+  touch-action: pan-y;
+  pointer-events: auto; /* Enable interaction within modal */
+}
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.project-header h2 {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fff, #aaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.project-meta {
+  display: flex;
+  gap: 16px;
+  color: #888;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.project-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.tech-tag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  color: #ccc;
+}
+
+.project-demo {
+  margin-top: 24px;
+  display: flex;
+  gap: 16px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: #fff;
+  color: #000;
+}
+
+.btn-primary:hover {
+  background: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+.instruction-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #ffedcc;
+  pointer-events: none;
+  text-shadow: 0 4px 20px rgba(0,0,0,1);
+  width: 90%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 5;
+}
+
+.instruction-overlay h1 {
+  font-family: 'Georgia', serif;
+  font-size: 3.5rem;
+  font-weight: normal;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.instruction-overlay p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  opacity: 0.85;
+  margin-bottom: 2.5rem;
+  line-height: 1.5;
+}
+
+.scroll-hint {
+  font-size: 0.85rem !important;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  animation: pulse 2.5s infinite;
+  opacity: 0.5 !important;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* Hide scrollbar for sleek look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Responsive adjustments for Mobile */
+@media (max-width: 768px) {
+  .project-modal {
+    padding: 24px;
+    width: 95%;
+    gap: 16px;
+  }
+  
+  .project-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .project-meta {
+    font-size: 0.8rem;
+  }
+  
+  .instruction-overlay {
+    width: 90%;
+  }
+  
+  .instruction-overlay h1 {
+    font-size: 1.5rem;
+  }
+  
+  .instruction-overlay p {
+    font-size: 0.9rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .close-button {
+    top: 12px;
+    right: 12px;
+    padding: 12px; /* larger touch target */
+  }
+  
+  .btn {
+    width: 100%; /* full width button on mobile */
+    justify-content: center;
+  }
+}

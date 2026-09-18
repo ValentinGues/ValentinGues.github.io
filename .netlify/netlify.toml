@@ -1,0 +1,28 @@
+plugins = []
+headers = []
+redirects = []
+
+[functions]
+
+[functions."*"]
+
+[build]
+publish = "C:\\Users\\guesv\\Desktop\\IUT\\PROJET PERSO\\TheOverlookPortfolio\\dist"
+publishOrigin = "ui"
+commandOrigin = "ui"
+base = "C:\\Users\\guesv\\Desktop\\IUT\\PROJET PERSO\\TheOverlookPortfolio"
+command = "npm run build"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
