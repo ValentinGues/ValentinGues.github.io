@@ -19,7 +19,9 @@ const NetflixMenu = ({ projects, onProjectClick }) => {
     <div className="netflix-container">
       {/* Navbar */}
       <header className="netflix-header">
-        <div className="netflix-logo">PORTFOLIO</div>
+        <div className="netflix-logo" style={{ display: 'flex', alignItems: 'center' }}>
+          <img src="/logo.png" alt="VG Logo" style={{ height: '36px', filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.2))' }} />
+        </div>
         <nav className="netflix-nav">
           <ul>
             <li className="active">Accueil</li>

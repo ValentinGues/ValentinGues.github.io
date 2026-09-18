@@ -138,6 +138,9 @@ function OverlookUI() {
             exit={{ opacity: 0, filter: 'blur(10px)', scale: 1.05, x: "-50%", y: "-50%" }}
             transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
           >
+            <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+              <img src="/logo.png" alt="VG Logo" style={{ height: '60px', filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' }} />
+            </div>
             <h1>Bienvenue à l'Overlook.</h1>
             <p>Chaque porte dissimule l'un de mes projets.</p>
             <p className="scroll-hint">Scrollez pour explorer les couloirs...</p>
