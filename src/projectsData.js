@@ -22,12 +22,13 @@ function parseProjectsData(text) {
     let demoUrl = "/placeholder.jpg";
     
     lines.forEach(line => {
-      if (line.startsWith('NOM:')) {
-        title = line.substring(4).trim();
-      } else if (line.startsWith('DESCRIPTION:')) {
-        description = line.substring(12).trim();
-      } else if (line.startsWith('IMAGE:')) {
-        demoUrl = line.substring(6).trim();
+      const cleanLine = line.trim();
+      if (cleanLine.startsWith('NOM:')) {
+        title = cleanLine.substring(4).trim();
+      } else if (cleanLine.startsWith('DESCRIPTION:')) {
+        description = cleanLine.substring(12).trim();
+      } else if (cleanLine.startsWith('IMAGE:')) {
+        demoUrl = cleanLine.substring(6).trim();
       }
     });
 
