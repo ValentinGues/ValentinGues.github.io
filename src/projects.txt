@@ -19,12 +19,12 @@ DESCRIPTION: Création d'un petit jeu pour permettre à moi et mes camarades de 
 IMAGE: /dev_startup_demo.png
 
 NOM: Labyrinthe JavaFX
-DESCRIPTION: Projet universitaire de création d'un jeu de labyrinthe 2D. Réalisé avec le framework JavaFX pour la vue et la logique algorithmique complexe de navigation à travers différents niveaux.
+DESCRIPTION: Projet universitaire de création d'un jeu de labyrinthe 2D. Réalisé avec le framework JavaFX pour la vue et la logique algorithmique complexe de navigation à travers différents niveaux. Ce projet m'as permis d'explorer la visualisation d'image en java. 
 IMAGE: /laby_demo.jpg
 
-NOM: Projet 7 (A Renseigner)
-DESCRIPTION: Description du projet 7...
-IMAGE: /placeholder.jpg
+NOM: Coach Dashboard 
+DESCRIPTION: Création d'une application Web de gestion de client par le coach sportif. Deux facade, la facade client qui peut renseigner ses séance d'entrainement et son alimentation et la facade coach qui permet de gerer plusieur client de programmer des rendez vous ou encore de discuté avec le client. Ce projet est sentimental pour moi, c'est le premier projet personnel que j'ai monté et il m'as permis de découvrir la puissance qu'avait une IA mal utilisé et d'imaginer ce que ça peut donner avec une utilisation professionnel. Il m'as également introduit à GIT et au système de gestion d'une base de client.	
+IMAGE: /CD_Demo.png
 
 NOM: Projet 8 (A Renseigner)
 DESCRIPTION: Description du projet 8...
