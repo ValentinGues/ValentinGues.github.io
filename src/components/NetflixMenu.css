@@ -93,14 +93,14 @@
 
 .netflix-hero-content {
   position: absolute;
-  bottom: 20%;
+  bottom: 15%;
   left: 4%;
-  width: 40%;
+  width: 50%;
   z-index: 10;
 }
 
 .netflix-hero-title {
-  font-size: 4rem;
+  font-size: clamp(2rem, 4.5vw, 4rem);
   font-weight: 800;
   margin-bottom: 20px;
   line-height: 1.1;
