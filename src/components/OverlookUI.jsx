@@ -197,11 +197,10 @@ function OverlookUI() {
                     ))}
                   </div>
                   
-                  <div className="project-demo">
-                    <a href={selectedProject.demoUrl} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                      <ExternalLink size={18} />
-                      Voir la démo
-                    </a>
+                  <div className="project-demo" style={{ marginTop: '20px' }}>
+                    {selectedProject.demoUrl && selectedProject.demoUrl !== '#' && (
+                      <img src={selectedProject.demoUrl} alt={`Démo de ${selectedProject.title}`} style={{ width: '100%', borderRadius: '8px', display: 'block', border: '1px solid #333' }} />
+                    )}
                   </div>
                 </div>
               </motion.div>
