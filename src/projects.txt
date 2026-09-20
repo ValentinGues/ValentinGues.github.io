@@ -1,6 +1,6 @@
 NOM: Station Météo Odomo
-DESCRIPTION: Développement et débogage d'une application de station météo destinée à traiter et visualiser des données environnementales. Mon rôle a consisté à concevoir l'architecture logique, implémenter les fonctionnalités en code et corriger les bugs pour rendre l'outil fonctionnel.
-IMAGE: /odomo_demo.jpg
+DESCRIPTION: Développement et débogage d'une application de station météo destinée à traiter et visualiser des données environnementales. Mon rôle a consisté à concevoir l'architecture logique via une suite d'exercices. Premier projet en IUT informatique validée confirmant mes acquis du lycée en programmation et logique de développement.
+IMAGE: /odomo_demo.png
 
 NOM: Base de données Musicalertes
 DESCRIPTION: Projet de fin de semestre réalisé en binôme. Nous avons entièrement co-conçu et implémenté le système de base de données d'une plateforme dédiée aux alertes pour les concerts et festivals. Mon travail est allé de la modélisation conceptuelle à la génération des scripts de création.
