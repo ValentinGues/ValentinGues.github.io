@@ -3,17 +3,16 @@ DESCRIPTION: Développement et débogage d'une application de station météo de
 IMAGE: /odomo_demo.png
 
 NOM: Base de données Musicalertes
-DESCRIPTION: Projet de fin de semestre réalisé en binôme. Nous avons entièrement co-conçu et implémenté le système de base de données d'une plateforme dédiée aux alertes pour les concerts et festivals. Mon travail est allé de la modélisation conceptuelle à la génération des scripts de création.
-IMAGE: /musicalertes_demo.jpg
+DESCRIPTION: Projet de fin de premier semestre réalisé en binôme. Notre missions, concevoir une base de données musical. Le projet m'as permis de mettre en relation un SQL théorique de cours face à la réalité de la construction complète d'une base.
+IMAGE: 
 
-NOM: Prévention des Risques en Nouvelle-Aquitaine (RPNA)
-DESCRIPTION: Une solution logicielle complète d'analyse et de prévention des risques, développée en équipe. J'ai eu un rôle polyvalent, intervenant à la fois sur le schéma de la base de données, la logique de traitement des données et la création de l'interface visuelle.
-IMAGE: /rpna_demo.jpg
+NOM: Risk Prevention in Nouvelle-Aquitaine (RPNA)
+DESCRIPTION: Une solution logicielle complète d'analyse et de prévention des risques, développée en équipe. Projet de fin de première année, mes tâches s'étendais de la rédaction d'un document de conception à la création de graphique et d'un script de remplissage de bases de données en python ou à la conception et la schématisation de celle-ci grâce a Win 'design.
+IMAGE: /rpna_demo.png
 
 NOM: Optimisation d'Environnement Virtuel Lubuntu
 DESCRIPTION: Un véritable défi d'optimisation technique. L'objectif était de faire tenir un environnement de développement fonctionnel et complet sur une machine virtuelle restreinte à une capacité de 8 Go. J'ai configuré et affiné le système pour y faire tourner l'ensemble des outils sans saturer l'espace.
 IMAGE: /lubuntu_demo.jpg
-
 NOM: DevStartup Tycoon
 DESCRIPTION: Jeu de gestion isométrique mêlant Java et C# avec une base de données SQLite. Le joueur incarne un développeur dans un garage devant faire croître sa startup informatique.
 IMAGE: /dev_startup_demo.jpg
