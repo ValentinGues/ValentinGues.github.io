@@ -13,9 +13,10 @@ IMAGE: /rpna_demo.png
 NOM: Optimisation d'Environnement Virtuel Lubuntu
 DESCRIPTION: Un véritable défi d'optimisation technique. L'objectif était de faire tenir un environnement de développement fonctionnel et complet sur une machine virtuelle restreinte à une capacité de 8 Go. J'ai configuré et affiné le système pour y faire tourner l'ensemble des outils sans saturer l'espace.
 IMAGE: /lubuntu_demo.jpg
+
 NOM: DevStartup Tycoon
-DESCRIPTION: Jeu de gestion isométrique mêlant Java et C# avec une base de données SQLite. Le joueur incarne un développeur dans un garage devant faire croître sa startup informatique.
-IMAGE: /dev_startup_demo.jpg
+DESCRIPTION: Création d'un petit jeu pour permettre à moi et mes camarades de revoir nos acquis avant la reprise scolaire, le principe est simple, coder pour permettre à votre entreprise de s'agrandir. Ce projet ma permis de développer mes compétence en paramétrage d'intelligence artificielle par  Google Antigravity. En effet, pour m'assurer d'une production rapide du jeu, j'ai réparti les tâches via des fichier .md et un système de "rôles" afin de créer des automatisme réduisant la charge de répétition et la consommation du modèle.
+IMAGE: /dev_startup_demo.png
 
 NOM: Labyrinthe JavaFX
 DESCRIPTION: Projet universitaire de création d'un jeu de labyrinthe 2D. Réalisé avec le framework JavaFX pour la vue et la logique algorithmique complexe de navigation à travers différents niveaux.
