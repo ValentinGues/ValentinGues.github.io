@@ -60,7 +60,7 @@ export const projectsData = [
     title: "Mon Parcours & Contact",
     description: "Retrouvez mon CV détaillé et n'hésitez pas à me contacter pour échanger sur de futures opportunités.",
     tech: ["LinkedIn", "GitHub", "Email"],
-    demoUrl: "/contact_demo.jpg",
+    demoUrl: "/contact_demo.png",
     color: "#aa0000",
     isContact: true
   }
