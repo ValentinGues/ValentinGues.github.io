@@ -25,7 +25,3 @@ IMAGE: /laby_demo.jpg
 NOM: Coach Dashboard 
 DESCRIPTION: Création d'une application Web de gestion de client par le coach sportif. Deux facade, la facade client qui peut renseigner ses séance d'entrainement et son alimentation et la facade coach qui permet de gerer plusieur client de programmer des rendez vous ou encore de discuté avec le client. Ce projet est sentimental pour moi, c'est le premier projet personnel que j'ai monté et il m'as permis de découvrir la puissance qu'avait une IA mal utilisé et d'imaginer ce que ça peut donner avec une utilisation professionnel. Il m'as également introduit à GIT et au système de gestion d'une base de client.	
 IMAGE: /CD_Demo.png
-
-NOM: Projet 8 (A Renseigner)
-DESCRIPTION: Description du projet 8...
-IMAGE: /placeholder.jpg
