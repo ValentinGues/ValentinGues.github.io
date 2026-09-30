@@ -68,8 +68,7 @@ function NetflixRoute() {
                     <div className="project-tech" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '10px' }}>
                       <a href="https://www.linkedin.com/in/valentin-gues-0a318b390/" target="_blank" rel="noreferrer" style={{ backgroundColor: '#0077b5', color: 'white', padding: '8px 15px', borderRadius: '4px', textDecoration: 'none', fontWeight: 'bold' }}>LinkedIn</a>
                       <a href="/CV_Valentin_GUES.pdf" target="_blank" rel="noreferrer" style={{ backgroundColor: '#E50914', color: 'white', padding: '8px 15px', borderRadius: '4px', textDecoration: 'none', fontWeight: 'bold' }}>Voir mon CV</a>
-                      <a href="mailto:guesvalentin@gmail.com" style={{ backgroundColor: '#333', color: 'white', padding: '8px 15px', borderRadius: '4px', textDecoration: 'none', fontWeight: 'bold' }}>Email</a>
-                    </div>
+                      </div>
                   ) : (
                     <div className="project-tech">
                       {selectedProject.tech.map(tech => (
