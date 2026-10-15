@@ -68,7 +68,7 @@ export default function Corridor({ startZ, endZ, projects = [] }) {
   carpetTexture.repeat.set(2, length / 2)
   carpetTexture.needsUpdate = true
 
-  const baseWallTexture = useTexture('/wallpaper.jpg')
+  const baseWallTexture = useTexture('/wallpaper.webp')
   
   const sideWallTexture = baseWallTexture.clone()
   sideWallTexture.wrapS = THREE.RepeatWrapping

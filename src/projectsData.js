@@ -19,7 +19,7 @@ function parseProjectsData(text) {
     const lines = block.split('\n');
     let title = "Projet " + (index + 1);
     let description = "";
-    let demoUrl = "/placeholder.jpg";
+    let demoUrl = "/placeholder.webp";
     
     lines.forEach(line => {
       const cleanLine = line.trim();
@@ -60,7 +60,7 @@ export const projectsData = [
     title: "Mon Parcours & Contact",
     description: "Retrouvez mon CV détaillé et n'hésitez pas à me contacter pour échanger sur de futures opportunités.",
     tech: ["LinkedIn", "GitHub", "Email"],
-    demoUrl: "/contact_demo.png",
+    demoUrl: "/contact_demo.webp",
     color: "#aa0000",
     isContact: true
   }
