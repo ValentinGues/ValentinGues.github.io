@@ -118,7 +118,7 @@ export default function Scene({ onDoorClick, projects, selectedProject, doorInde
   return (
     <group>
       <Environment preset="night" />
-      <ambientLight intensity={0.02} color="#222233" />
+      <ambientLight intensity={0.35} color="#ffe8cc" />
       
       <Corridor startZ={corridorStartZ} endZ={corridorEndZ} projects={regularProjects} />
       

@@ -58,13 +58,15 @@ export default function Door({ project, position, rotation, isOpen, onClick }) {
         <meshStandardMaterial attach="material-5" color={project.color || "#ffffff"} side={THREE.BackSide} roughness={0.9} /> {/* Mur du fond */}
       </mesh>
       
-      {/* Éclairage intérieur de la chambre */}
-      <pointLight 
-        position={[0, 1.5, -1.0]} 
-        intensity={isOpen ? 1.5 : 0} 
-        distance={4} 
-        color={project.color || "#ffffff"} 
-      />
+      {/* Éclairage intérieur de la chambre (uniquement quand ouverte) */}
+      {isOpen && (
+        <pointLight 
+          position={[0, 1.5, -1.0]} 
+          intensity={1.5} 
+          distance={4} 
+          color={project.color || "#ffffff"} 
+        />
+      )}
 
       {/* Charnière */}
       <group 
@@ -132,27 +134,19 @@ export default function Door({ project, position, rotation, isOpen, onClick }) {
         </group>
       </group>
 
-      {/* Lumière permanente pour mettre la porte en valeur dans le couloir sombre */}
-      <spotLight 
-        position={[0, 2.5, 1.5]} 
-        target={hingeRef.current}
-        angle={Math.PI / 4} 
-        penumbra={0.8} 
-        intensity={2.5} 
-        color="#ffffff"
-        distance={6}
-      />
-
-      {/* Lumière colorée supplémentaire au survol (toujours montée pour éviter la recompilation des shaders, seule l'intensité change) */}
-      <spotLight 
-        position={[0, 2.5, 2]} 
-        target={hingeRef.current}
-        angle={Math.PI / 4} 
-        penumbra={1} 
-        intensity={hovered ? 2 : 0} 
-        color={project.color || "#ffffff"}
-        distance={5}
-      />
+      {/* Lumière d'accentuation ciblée uniquement au survol */}
+      {hovered && (
+        <spotLight 
+          position={[0, 2.5, 2]} 
+          target={hingeRef.current}
+          angle={Math.PI / 4} 
+          penumbra={0.8} 
+          intensity={2} 
+          color={project.color || "#ffffff"}
+          distance={5}
+        />
+      )}
     </group>
   )
 }
+

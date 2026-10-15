@@ -191,7 +191,10 @@ export default function Corridor({ startZ, endZ, projects = [] }) {
               <cylinderGeometry args={[0.1, 0.1, 0.05]} />
               <meshStandardMaterial color="#333" metalness={0.8} roughness={0.2} />
             </mesh>
-            <pointLight position={[0, -0.3, 0]} intensity={0.5} distance={12} color="#ffedcc" />
+            {/* 3 lumières clés équitablement réparties le long du couloir au lieu de 9 */}
+            {i % 3 === 0 && (
+              <pointLight position={[0, -0.3, 0]} intensity={0.7} distance={20} color="#ffedcc" decay={2} />
+            )}
           </group>
 
           <group position={[-1.9, 2.0, 0]}>
@@ -203,7 +206,6 @@ export default function Corridor({ startZ, endZ, projects = [] }) {
               <boxGeometry args={[0.05, 0.2, 0.05]} />
               <meshStandardMaterial color="#b8860b" metalness={0.8} roughness={0.3} />
             </mesh>
-            <pointLight intensity={0.3} distance={6} color="#ffedcc" />
           </group>
 
           <group position={[1.9, 2.0, 0]}>
@@ -215,7 +217,6 @@ export default function Corridor({ startZ, endZ, projects = [] }) {
               <boxGeometry args={[0.05, 0.2, 0.05]} />
               <meshStandardMaterial color="#b8860b" metalness={0.8} roughness={0.3} />
             </mesh>
-            <pointLight intensity={0.3} distance={6} color="#ffedcc" />
           </group>
         </group>
       ))}

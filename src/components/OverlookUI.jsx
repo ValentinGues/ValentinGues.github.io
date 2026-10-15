@@ -115,8 +115,8 @@ function OverlookUI() {
         />
         <Canvas
           camera={{ position: [0, 1.5, 8], fov: isMobile ? 100 : 60 }}
-          dpr={[1, 2]}
-          shadows
+          dpr={[1, 1.5]}
+          gl={{ powerPreference: 'high-performance', antialias: true }}
         >
           <color attach="background" args={['#050505']} />
           <fog attach="fog" args={['#050505', 10, 30]} />
