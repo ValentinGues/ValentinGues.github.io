@@ -1,9 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Text, useCursor } from '@react-three/drei'
 import * as THREE from 'three'
 
-export default function Elevator({ project, position, rotation, isOpen, onClick }) {
+const Elevator = React.memo(function Elevator({ project, position, rotation, isOpen, onClick }) {
   const leftDoorRef = useRef()
   const rightDoorRef = useRef()
   const glowRef = useRef()
@@ -32,9 +32,9 @@ export default function Elevator({ project, position, rotation, isOpen, onClick 
   })
 
   // Matériaux optimisés (créés une seule fois)
-  const frameMaterial = new THREE.MeshStandardMaterial({ color: "#2a2a2a", metalness: 0.8, roughness: 0.5 })
-  const doorMaterial = new THREE.MeshStandardMaterial({ color: "#666666", metalness: 0.6, roughness: 0.4 })
-  const detailMaterial = new THREE.MeshStandardMaterial({ color: "#111111", metalness: 0.9, roughness: 0.2 })
+  const frameMaterial = useMemo(() => new THREE.MeshStandardMaterial({ color: "#2a2a2a", metalness: 0.8, roughness: 0.5 }), [])
+  const doorMaterial = useMemo(() => new THREE.MeshStandardMaterial({ color: "#666666", metalness: 0.6, roughness: 0.4 }), [])
+  const detailMaterial = useMemo(() => new THREE.MeshStandardMaterial({ color: "#111111", metalness: 0.9, roughness: 0.2 }), [])
 
   return (
     <group 
@@ -126,9 +126,6 @@ export default function Elevator({ project, position, rotation, isOpen, onClick 
       >
         <object3D position={[0, 0, 2]} attach="target" />
       </spotLight>
-
-      {/* Lumières intérieures de la cabine */}
-      <pointLight position={[0, 2.0, -0.75]} color="#ff0000" intensity={1.5} distance={5} />
       
       {/* Plafonniers de l'ascenseur */}
       <mesh position={[-0.4, 2.75, -0.75]}>
@@ -176,18 +173,8 @@ export default function Elevator({ project, position, rotation, isOpen, onClick 
           <meshStandardMaterial color={hovered ? "#ff0000" : "#550000"} emissive="#ff0000" emissiveIntensity={hovered ? 2 : 0} />
         </mesh>
       </group>
-      
-      {/* Lumière permanente pour éclairer l'ascenseur (sinon il est trop noir) */}
-      <spotLight 
-        position={[0, 4, 3]} 
-        angle={Math.PI / 3} 
-        penumbra={0.5} 
-        intensity={2.5} 
-        color="#ffffff"
-        distance={15}
-      >
-        <object3D position={[0, 1.5, 0]} attach="target" />
-      </spotLight>
     </group>
   )
-}
+})
+
+export default Elevator

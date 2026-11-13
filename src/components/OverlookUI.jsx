@@ -1,4 +1,4 @@
-import React, { useState, Suspense, useEffect, useCallback } from 'react'
+import React, { useState, Suspense, useEffect, useCallback, useRef } from 'react'
 import { Canvas, useThree } from '@react-three/fiber'
 import { Loader } from '@react-three/drei'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -63,7 +63,8 @@ function SwipeManager({ onSwipeUp, onSwipeDown, onContinuousScroll }) {
 function OverlookUI() {
   const [selectedProject, setSelectedProject] = useState(null)
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
-  const [doorIndex, setDoorIndex] = useState(0)
+  const [hasScrolled, setHasScrolled] = useState(false)
+  const doorIndexRef = useRef(0)
   const navigate = useNavigate()
   
   const maxDoors = projectsData.length
@@ -75,35 +76,39 @@ function OverlookUI() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  const handleDoorClick = (projectId) => {
+  const handleDoorClick = useCallback((projectId) => {
     const project = projectsData.find(p => p.id === projectId)
     if (project) {
       setSelectedProject(project)
     }
-  }
+  }, [])
 
   const closeModal = () => setSelectedProject(null)
 
   const handleContinuousScroll = useCallback((deltaY) => {
     if (selectedProject) return
-    setDoorIndex(prev => {
-      // Ajustez la sensibilité ici : 0.003 permet de faire environ 1 porte par grand coup de molette
-      let newIndex = prev + deltaY * 0.003
-      return Math.max(0, Math.min(newIndex, maxDoors))
-    })
+    // Ajustez la sensibilité ici : 0.003 permet de faire environ 1 porte par grand coup de molette
+    const newIndex = Math.max(0, Math.min(doorIndexRef.current + deltaY * 0.003, maxDoors))
+    doorIndexRef.current = newIndex
+    if (newIndex > 0) {
+      setHasScrolled(prev => (prev ? prev : true))
+    }
   }, [maxDoors, selectedProject])
 
   const handleSwipeDown = useCallback(() => {
     if (selectedProject) return
-    setDoorIndex(prev => Math.min(Math.floor(prev) + 1, maxDoors))
+    const newIndex = Math.min(Math.floor(doorIndexRef.current) + 1, maxDoors)
+    doorIndexRef.current = newIndex
+    if (newIndex > 0) {
+      setHasScrolled(prev => (prev ? prev : true))
+    }
   }, [maxDoors, selectedProject])
 
   const handleSwipeUp = useCallback(() => {
     if (selectedProject) return
-    setDoorIndex(prev => Math.max(Math.ceil(prev) - 1, 0))
+    const newIndex = Math.max(Math.ceil(doorIndexRef.current) - 1, 0)
+    doorIndexRef.current = newIndex
   }, [selectedProject])
-
-  const hasScrolled = doorIndex > 0
 
   return (
     <>
@@ -116,7 +121,7 @@ function OverlookUI() {
         <Canvas
           camera={{ position: [0, 1.5, 8], fov: isMobile ? 100 : 60 }}
           dpr={[1, 1.5]}
-          gl={{ powerPreference: 'high-performance', antialias: true }}
+          gl={{ powerPreference: 'high-performance', antialias: !isMobile }}
         >
           <color attach="background" args={['#050505']} />
           <fog attach="fog" args={['#050505', 10, 30]} />
@@ -124,7 +129,7 @@ function OverlookUI() {
           <CameraUpdater isMobile={isMobile} />
           
           <Suspense fallback={null}>
-            <Scene onDoorClick={handleDoorClick} projects={projectsData} selectedProject={selectedProject} doorIndex={doorIndex} />
+            <Scene onDoorClick={handleDoorClick} projects={projectsData} selectedProject={selectedProject} doorIndexRef={doorIndexRef} />
           </Suspense>
         </Canvas>
       </div>
@@ -133,9 +138,9 @@ function OverlookUI() {
         {!hasScrolled && (
           <motion.div 
             className="instruction-overlay"
-            initial={{ opacity: 0, filter: 'blur(10px)', scale: 0.95, x: "-50%", y: "-50%" }}
-            animate={{ opacity: 1, filter: 'blur(0px)', scale: 1, x: "-50%", y: "-50%" }}
-            exit={{ opacity: 0, filter: 'blur(10px)', scale: 1.05, x: "-50%", y: "-50%" }}
+            initial={{ opacity: 0, scale: 0.95, x: "-50%", y: "-50%" }}
+            animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
+            exit={{ opacity: 0, scale: 1.05, x: "-50%", y: "-50%" }}
             transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
           >
             <div style={{ textAlign: 'center', marginBottom: '1rem' }}>

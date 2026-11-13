@@ -1,16 +1,20 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Text, RoundedBox } from '@react-three/drei'
 import * as THREE from 'three'
 
-export default function Door({ project, position, rotation, isOpen, onClick }) {
+const BLACK_COLOR = new THREE.Color('#000000')
+
+const Door = React.memo(function Door({ project, position, rotation, isOpen, onClick }) {
   const [hovered, setHovered] = useState(false)
   const materialRef = useRef()
   const hingeRef = useRef()
 
+  const hoverColor = useMemo(() => new THREE.Color(project.color || '#ffffff'), [project.color])
+
   useFrame((state, delta) => {
     if (materialRef.current) {
-      const targetEmissive = hovered ? new THREE.Color(project.color || '#ffffff') : new THREE.Color('#000000')
+      const targetEmissive = hovered ? hoverColor : BLACK_COLOR
       const targetIntensity = hovered ? 0.15 : 0
       
       materialRef.current.emissive.lerp(targetEmissive, delta * 5)
@@ -32,15 +36,15 @@ export default function Door({ project, position, rotation, isOpen, onClick }) {
       {/* On les rend plus larges pour qu'ils débordent sur le papier peint et cachent le trou */}
       <group position={[0, 0, 0]}>
         {/* Poteau gauche (déborde de -0.7 à -0.9) */}
-        <RoundedBox args={[0.2, 2.4, 0.1]} position={[-0.8, 1.2, 0]} radius={0.02} smoothness={4}>
+        <RoundedBox args={[0.2, 2.4, 0.1]} position={[-0.8, 1.2, 0]} radius={0.02} smoothness={1}>
           <meshStandardMaterial color={frameColor} roughness={0.6} />
         </RoundedBox>
         {/* Poteau droit (déborde de 0.7 à 0.9) */}
-        <RoundedBox args={[0.2, 2.4, 0.1]} position={[0.8, 1.2, 0]} radius={0.02} smoothness={4}>
+        <RoundedBox args={[0.2, 2.4, 0.1]} position={[0.8, 1.2, 0]} radius={0.02} smoothness={1}>
           <meshStandardMaterial color={frameColor} roughness={0.6} />
         </RoundedBox>
         {/* Poutre supérieure (déborde de 2.4 à 2.6 en hauteur, et couvre les deux poteaux en largeur) */}
-        <RoundedBox args={[1.8, 0.2, 0.1]} position={[0, 2.5, 0]} radius={0.02} smoothness={4}>
+        <RoundedBox args={[1.8, 0.2, 0.1]} position={[0, 2.5, 0]} radius={0.02} smoothness={1}>
           <meshStandardMaterial color={frameColor} roughness={0.6} />
         </RoundedBox>
       </group>
@@ -83,7 +87,7 @@ export default function Door({ project, position, rotation, isOpen, onClick }) {
           }}
         >
           {/* Porte principale arrondie */}
-          <RoundedBox args={[1.4, 2.4, 0.05]} radius={0.01} smoothness={4}>
+          <RoundedBox args={[1.4, 2.4, 0.05]} radius={0.01} smoothness={1}>
             <meshStandardMaterial 
               ref={materialRef}
               color={doorColor}
@@ -92,22 +96,22 @@ export default function Door({ project, position, rotation, isOpen, onClick }) {
           </RoundedBox>
           
           {/* Panneaux décoratifs arrondis */}
-          <RoundedBox args={[0.5, 0.8, 0.02]} radius={0.01} smoothness={4} position={[-0.35, 0.6, 0.03]}>
+          <RoundedBox args={[0.5, 0.8, 0.02]} radius={0.01} smoothness={1} position={[-0.35, 0.6, 0.03]}>
             <meshStandardMaterial color={doorColor} roughness={0.5} />
           </RoundedBox>
-          <RoundedBox args={[0.5, 0.8, 0.02]} radius={0.01} smoothness={4} position={[0.35, 0.6, 0.03]}>
+          <RoundedBox args={[0.5, 0.8, 0.02]} radius={0.01} smoothness={1} position={[0.35, 0.6, 0.03]}>
             <meshStandardMaterial color={doorColor} roughness={0.5} />
           </RoundedBox>
-          <RoundedBox args={[0.5, 0.8, 0.02]} radius={0.01} smoothness={4} position={[-0.35, -0.5, 0.03]}>
+          <RoundedBox args={[0.5, 0.8, 0.02]} radius={0.01} smoothness={1} position={[-0.35, -0.5, 0.03]}>
             <meshStandardMaterial color={doorColor} roughness={0.5} />
           </RoundedBox>
-          <RoundedBox args={[0.5, 0.8, 0.02]} radius={0.01} smoothness={4} position={[0.35, -0.5, 0.03]}>
+          <RoundedBox args={[0.5, 0.8, 0.02]} radius={0.01} smoothness={1} position={[0.35, -0.5, 0.03]}>
             <meshStandardMaterial color={doorColor} roughness={0.5} />
           </RoundedBox>
           
           {/* Poignée de porte métallique réaliste */}
           <mesh position={[0.55, 0, 0.05]}>
-            <sphereGeometry args={[0.04, 32, 32]} />
+            <sphereGeometry args={[0.04, 12, 12]} />
             <meshStandardMaterial color="#222" metalness={0.9} roughness={0.1} />
           </mesh>
           
@@ -117,7 +121,6 @@ export default function Door({ project, position, rotation, isOpen, onClick }) {
             color="#222"
             anchorX="center"
             anchorY="middle"
-            font="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2Bg-4.ttf"
           >
             {project.roomNumber}
           </Text>
@@ -148,5 +151,7 @@ export default function Door({ project, position, rotation, isOpen, onClick }) {
       )}
     </group>
   )
-}
+})
+
+export default Door
 

@@ -59,83 +59,142 @@ function createOverlookCarpetTexture() {
   return texture
 }
 
-export default function Corridor({ startZ, endZ, projects = [] }) {
+const Corridor = React.memo(function Corridor({ startZ, endZ, projects = [] }) {
   const length = startZ - endZ
   const centerZ = (startZ + endZ) / 2
 
   const baseCarpetTexture = useMemo(() => createOverlookCarpetTexture(), [])
-  const carpetTexture = baseCarpetTexture.clone()
-  carpetTexture.repeat.set(2, length / 2)
-  carpetTexture.needsUpdate = true
+  const carpetTexture = useMemo(() => {
+    const tex = baseCarpetTexture.clone()
+    tex.repeat.set(2, length / 2)
+    tex.needsUpdate = true
+    return tex
+  }, [baseCarpetTexture, length])
 
   const baseWallTexture = useTexture('/wallpaper.webp')
-  
-  const sideWallTexture = baseWallTexture.clone()
-  sideWallTexture.wrapS = THREE.RepeatWrapping
-  sideWallTexture.wrapT = THREE.RepeatWrapping
-  sideWallTexture.repeat.set(length / 3, 1)
-  sideWallTexture.needsUpdate = true
 
-  const endWallTexture = baseWallTexture.clone()
-  endWallTexture.wrapS = THREE.RepeatWrapping
-  endWallTexture.wrapT = THREE.RepeatWrapping
-  endWallTexture.repeat.set(4 / 3, 1)
-  endWallTexture.needsUpdate = true
+  const sideWallTexture = useMemo(() => {
+    const tex = baseWallTexture.clone()
+    tex.wrapS = THREE.RepeatWrapping
+    tex.wrapT = THREE.RepeatWrapping
+    tex.repeat.set(length / 3, 1)
+    tex.needsUpdate = true
+    return tex
+  }, [baseWallTexture, length])
 
-  const pillarZs = []
-  for (let z = Math.floor(startZ / 4) * 4 + 2; z >= endZ; z -= 4) {
-    if (z <= startZ && z >= endZ) pillarZs.push(z)
-  }
-  
-  const lampZs = []
-  for (let z = 0; z >= endZ; z -= 8) {
-    if (z - 4 >= endZ) lampZs.push(z - 4)
-  }
+  const endWallTexture = useMemo(() => {
+    const tex = baseWallTexture.clone()
+    tex.wrapS = THREE.RepeatWrapping
+    tex.wrapT = THREE.RepeatWrapping
+    tex.repeat.set(4 / 3, 1)
+    tex.needsUpdate = true
+    return tex
+  }, [baseWallTexture])
+
+  const sideWallMaterial = useMemo(
+    () => new THREE.MeshStandardMaterial({ map: sideWallTexture, roughness: 0.9 }),
+    [sideWallTexture]
+  )
+
+  const endWallMaterial = useMemo(
+    () => new THREE.MeshStandardMaterial({ map: endWallTexture, roughness: 0.9 }),
+    [endWallTexture]
+  )
+
+  const pillarZs = useMemo(() => {
+    const zs = []
+    for (let z = Math.floor(startZ / 4) * 4 + 2; z >= endZ; z -= 4) {
+      if (z <= startZ && z >= endZ) zs.push(z)
+    }
+    return zs
+  }, [startZ, endZ])
+
+  const lampZs = useMemo(() => {
+    const zs = []
+    for (let z = 0; z >= endZ; z -= 8) {
+      if (z - 4 >= endZ) zs.push(z - 4)
+    }
+    return zs
+  }, [endZ])
 
   const corridorWidth = 4
 
   // --- CALCUL DES MURS LATERAUX AVEC TROUS ---
-  const leftWalls = []
-  const rightWalls = []
-  
-  let currentLeftZ = startZ
-  let currentRightZ = startZ
+  const { leftWalls, rightWalls } = useMemo(() => {
+    const left = []
+    const right = []
 
-  projects.forEach((proj, index) => {
-    const isLeft = index % 2 === 0
-    const doorZ = -index * 8
-    
-    // Le trou fait 1.6 de large (de doorZ + 0.8 à doorZ - 0.8)
-    const holeStart = doorZ + 0.8
-    const holeEnd = doorZ - 0.8
+    let currentLeftZ = startZ
+    let currentRightZ = startZ
 
-    if (isLeft) {
-      if (currentLeftZ > holeStart) {
-        const segLen = currentLeftZ - holeStart
-        leftWalls.push(<mesh key={`lw-${index}`} position={[-2, 1.5, currentLeftZ - segLen/2]} rotation={[0, Math.PI / 2, 0]}><planeGeometry args={[segLen, 3]} /><meshStandardMaterial map={sideWallTexture} roughness={0.9} /></mesh>)
+    projects.forEach((proj, index) => {
+      const isLeft = index % 2 === 0
+      const doorZ = -index * 8
+
+      // Le trou fait 1.6 de large (de doorZ + 0.8 à doorZ - 0.8)
+      const holeStart = doorZ + 0.8
+      const holeEnd = doorZ - 0.8
+
+      if (isLeft) {
+        if (currentLeftZ > holeStart) {
+          const segLen = currentLeftZ - holeStart
+          left.push(
+            <mesh key={`lw-${index}`} position={[-2, 1.5, currentLeftZ - segLen / 2]} rotation={[0, Math.PI / 2, 0]}>
+              <planeGeometry args={[segLen, 3]} />
+              <primitive object={sideWallMaterial} attach="material" />
+            </mesh>
+          )
+        }
+        // Dessus de la porte
+        left.push(
+          <mesh key={`lwt-${index}`} position={[-2, 2.75, doorZ]} rotation={[0, Math.PI / 2, 0]}>
+            <planeGeometry args={[1.6, 0.5]} />
+            <primitive object={sideWallMaterial} attach="material" />
+          </mesh>
+        )
+        currentLeftZ = holeEnd
+      } else {
+        if (currentRightZ > holeStart) {
+          const segLen = currentRightZ - holeStart
+          right.push(
+            <mesh key={`rw-${index}`} position={[2, 1.5, currentRightZ - segLen / 2]} rotation={[0, -Math.PI / 2, 0]}>
+              <planeGeometry args={[segLen, 3]} />
+              <primitive object={sideWallMaterial} attach="material" />
+            </mesh>
+          )
+        }
+        // Dessus de la porte
+        right.push(
+          <mesh key={`rwt-${index}`} position={[2, 2.75, doorZ]} rotation={[0, -Math.PI / 2, 0]}>
+            <planeGeometry args={[1.6, 0.5]} />
+            <primitive object={sideWallMaterial} attach="material" />
+          </mesh>
+        )
+        currentRightZ = holeEnd
       }
-      // Dessus de la porte
-      leftWalls.push(<mesh key={`lwt-${index}`} position={[-2, 2.75, doorZ]} rotation={[0, Math.PI / 2, 0]}><planeGeometry args={[1.6, 0.5]} /><meshStandardMaterial map={sideWallTexture} roughness={0.9} /></mesh>)
-      currentLeftZ = holeEnd
-    } else {
-      if (currentRightZ > holeStart) {
-        const segLen = currentRightZ - holeStart
-        rightWalls.push(<mesh key={`rw-${index}`} position={[2, 1.5, currentRightZ - segLen/2]} rotation={[0, -Math.PI / 2, 0]}><planeGeometry args={[segLen, 3]} /><meshStandardMaterial map={sideWallTexture} roughness={0.9} /></mesh>)
-      }
-      // Dessus de la porte
-      rightWalls.push(<mesh key={`rwt-${index}`} position={[2, 2.75, doorZ]} rotation={[0, -Math.PI / 2, 0]}><planeGeometry args={[1.6, 0.5]} /><meshStandardMaterial map={sideWallTexture} roughness={0.9} /></mesh>)
-      currentRightZ = holeEnd
+    })
+
+    if (currentLeftZ > endZ) {
+      const segLen = currentLeftZ - endZ
+      left.push(
+        <mesh key="lw-end" position={[-2, 1.5, currentLeftZ - segLen / 2]} rotation={[0, Math.PI / 2, 0]}>
+          <planeGeometry args={[segLen, 3]} />
+          <primitive object={sideWallMaterial} attach="material" />
+        </mesh>
+      )
     }
-  })
+    if (currentRightZ > endZ) {
+      const segLen = currentRightZ - endZ
+      right.push(
+        <mesh key="rw-end" position={[2, 1.5, currentRightZ - segLen / 2]} rotation={[0, -Math.PI / 2, 0]}>
+          <planeGeometry args={[segLen, 3]} />
+          <primitive object={sideWallMaterial} attach="material" />
+        </mesh>
+      )
+    }
 
-  if (currentLeftZ > endZ) {
-    const segLen = currentLeftZ - endZ
-    leftWalls.push(<mesh key="lw-end" position={[-2, 1.5, currentLeftZ - segLen/2]} rotation={[0, Math.PI / 2, 0]}><planeGeometry args={[segLen, 3]} /><meshStandardMaterial map={sideWallTexture} roughness={0.9} /></mesh>)
-  }
-  if (currentRightZ > endZ) {
-    const segLen = currentRightZ - endZ
-    rightWalls.push(<mesh key="rw-end" position={[2, 1.5, currentRightZ - segLen/2]} rotation={[0, -Math.PI / 2, 0]}><planeGeometry args={[segLen, 3]} /><meshStandardMaterial map={sideWallTexture} roughness={0.9} /></mesh>)
-  }
+    return { leftWalls: left, rightWalls: right }
+  }, [projects, startZ, endZ, sideWallMaterial])
 
   return (
     <group>
@@ -156,20 +215,20 @@ export default function Corridor({ startZ, endZ, projects = [] }) {
       {rightWalls}
       
       {/* Plinthes */}
-      <RoundedBox args={[0.04, 0.3, length]} radius={0.01} smoothness={4} position={[-1.97, 0.15, centerZ]}>
+      <RoundedBox args={[0.04, 0.3, length]} radius={0.01} smoothness={1} position={[-1.97, 0.15, centerZ]}>
         <meshStandardMaterial color="#2d1c11" roughness={0.5} />
       </RoundedBox>
-      <RoundedBox args={[0.04, 0.3, length]} radius={0.01} smoothness={4} position={[1.97, 0.15, centerZ]}>
+      <RoundedBox args={[0.04, 0.3, length]} radius={0.01} smoothness={1} position={[1.97, 0.15, centerZ]}>
         <meshStandardMaterial color="#2d1c11" roughness={0.5} />
       </RoundedBox>
       
       {/* Piliers encadrant les portes */}
       {pillarZs.map((z, i) => (
         <group key={`pillar-${i}`} position={[0, 1.5, z]}>
-          <RoundedBox args={[0.1, 3, 0.2]} radius={0.02} smoothness={4} position={[-1.95, 0, 0]}>
+          <RoundedBox args={[0.1, 3, 0.2]} radius={0.02} smoothness={1} position={[-1.95, 0, 0]}>
             <meshStandardMaterial color="#f4f0e6" roughness={0.8} />
           </RoundedBox>
-          <RoundedBox args={[0.1, 3, 0.2]} radius={0.02} smoothness={4} position={[1.95, 0, 0]}>
+          <RoundedBox args={[0.1, 3, 0.2]} radius={0.02} smoothness={1} position={[1.95, 0, 0]}>
             <meshStandardMaterial color="#f4f0e6" roughness={0.8} />
           </RoundedBox>
         </group>
@@ -226,19 +285,21 @@ export default function Corridor({ startZ, endZ, projects = [] }) {
         {/* Panneau Gauche */}
         <mesh position={[-1.4, 1.5, 0]}>
           <planeGeometry args={[1.2, 3]} />
-          <meshStandardMaterial map={endWallTexture} roughness={0.9} />
+          <primitive object={endWallMaterial} attach="material" />
         </mesh>
         {/* Panneau Droit */}
         <mesh position={[1.4, 1.5, 0]}>
           <planeGeometry args={[1.2, 3]} />
-          <meshStandardMaterial map={endWallTexture} roughness={0.9} />
+          <primitive object={endWallMaterial} attach="material" />
         </mesh>
         {/* Panneau Haut */}
         <mesh position={[0, 2.9, 0]}>
           <planeGeometry args={[1.6, 0.2]} />
-          <meshStandardMaterial map={endWallTexture} roughness={0.9} />
+          <primitive object={endWallMaterial} attach="material" />
         </mesh>
       </group>
     </group>
   )
-}
+})
+
+export default Corridor

@@ -1,16 +1,15 @@
-import React, { useRef } from 'react'
+import React, { useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Environment, Preload, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import Door from './Door'
 import Elevator from './Elevator'
 import Corridor from './Corridor'
 
-export default function Scene({ onDoorClick, projects, selectedProject, doorIndex }) {
+export default function Scene({ onDoorClick, projects, selectedProject, doorIndexRef }) {
   const cameraTarget = useRef(new THREE.Vector3(0, 1.5, -10))
   
-  const regularProjects = projects.filter(p => !p.isContact)
-  const contactProject = projects.find(p => p.isContact)
+  const regularProjects = useMemo(() => projects.filter(p => !p.isContact), [projects])
+  const contactProject = useMemo(() => projects.find(p => p.isContact), [projects])
   
   const doorSpacing = 8
   const maxRegularIndex = regularProjects.length - 1
@@ -24,6 +23,7 @@ export default function Scene({ onDoorClick, projects, selectedProject, doorInde
   const corridorEndZ = contactDoorZ - 0.05
 
   useFrame((state, delta) => {
+    const doorIndex = doorIndexRef.current
     let targetZ;
     const startZ = corridorStartZ - 1;
     
@@ -117,7 +117,7 @@ export default function Scene({ onDoorClick, projects, selectedProject, doorInde
 
   return (
     <group>
-      <Environment preset="night" />
+      <hemisphereLight args={['#ffd6a5', '#1a0a05', 0.45]} />
       <ambientLight intensity={0.35} color="#ffe8cc" />
       
       <Corridor startZ={corridorStartZ} endZ={corridorEndZ} projects={regularProjects} />
@@ -150,9 +150,6 @@ export default function Scene({ onDoorClick, projects, selectedProject, doorInde
           onClick={() => onDoorClick(contactProject.id)}
         />
       )}
-
-      {/* Force la compilation de tous les shaders des objets cachés pour éviter le lag in-game */}
-      <Preload all />
     </group>
   )
 }
