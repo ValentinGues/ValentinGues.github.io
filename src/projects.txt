@@ -4,7 +4,7 @@ IMAGE: /odomo_demo.webp
 
 NOM: Base de données Musicalertes
 DESCRIPTION: Projet de fin de premier semestre réalisé en binôme. Notre missions, concevoir une base de données musical. Le projet m'as permis de mettre en relation un SQL théorique de cours face à la réalité de la construction complète d'une base.
-IMAGE: 
+IMAGE: /mssql.png
 
 NOM: Risk Prevention in Nouvelle-Aquitaine (RPNA)
 DESCRIPTION: Une solution logicielle complète d'analyse et de prévention des risques, développée en équipe. Projet de fin de première année, mes tâches s'étendais de la rédaction d'un document de conception à la création de graphique et d'un script de remplissage de bases de données en python ou à la conception et la schématisation de celle-ci grâce a Win 'design.

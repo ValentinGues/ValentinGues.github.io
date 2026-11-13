@@ -117,8 +117,8 @@ export default function Scene({ onDoorClick, projects, selectedProject, doorInde
 
   return (
     <group>
-      <hemisphereLight args={['#ffd6a5', '#1a0a05', 0.45]} />
-      <ambientLight intensity={0.35} color="#ffe8cc" />
+      <hemisphereLight args={['#ffd6a5', '#1a0a05', 0.2]} />
+      <ambientLight intensity={0.2} color="#ffe8cc" />
       
       <Corridor startZ={corridorStartZ} endZ={corridorEndZ} projects={regularProjects} />
       
